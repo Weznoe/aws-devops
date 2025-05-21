@@ -60,6 +60,32 @@ If you already have a suitable development instance setup, simply [download this
     1. You may be prompted for a `sudo` password.
 
 ### Containerize
+##### Download the sample app repo
+1. `cd ~`
+1. `git clone https://github.com/msutton150/eventsappstart.git`
+##### Create your ECR repos to host your images
+1. Navigate to the ECR service.
+1. Select `Create Repository`.
+1. Name the repo `events-api`. 
+1. Accept the defaults for everything else.
+1. Select `Create`.
+1. Do the same for `events-website` and `events-job`.
+
+
+1. Copy the URI of one of the repos, you just created.
+1. On your `deploy-env` box, login to ECR through docker: 
+```docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) <the repo uri you copied>```
+
+##### Build and tag the images
+The build script included in this repo expects the sample app code to live at `~/eventsappstart/`.
+
+1. `cd ~/aws-kubernetes/docker`
+1. Run the build script, passing the  base URI of your ECR repos (like `<account-#>.dkr.ecr.<region>.amazonaws.com`) as an argument: 
+```
+./build_all.sh <base_uri>
+```
+--- NOTE that the base_uri should not end in a trailing `/`.
+This will create and push v1.0 images for all three apps, and a v2.0 image for events-website.
 
 
 ### Deploy Cluster
@@ -69,10 +95,10 @@ If you already have a suitable development instance setup, simply [download this
 ### Cleanup
 When you're all done, clean up your VM you created in [Environment](#environment). 
 1. Navigate to the EC2 service.
-2. Click the `Instances` link on the left.
-3. Find your active VM and select it.
-4. Select `Instance State` and then `Terminate (delete) instance`
-5. In the confirmation dialog, select `Terminate (delete)`.
+1. Click the `Instances` link on the left.
+1. Find your active VM and select it.
+1. Select `Instance State` and then `Terminate (delete) instance`
+1. In the confirmation dialog, select `Terminate (delete)`.
 
 
 
