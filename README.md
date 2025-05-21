@@ -88,8 +88,7 @@ If you already have a suitable development instance setup, simply [download this
     - The build script included in this repo expects the sample app code to live at `~/eventsappstart/` by default, but a different path can be passed as the second arg.
 
 
-This will create and push v1.0 images for all three apps, and a v2.0 image for events-website.
-
+This will create and push v1.0 images for all three apps, a v2.0 image for events-website, and update the `.yaml` resource files with the correct images.
 
 ### Deploy Cluster
 
