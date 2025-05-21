@@ -77,14 +77,17 @@ If you already have a suitable development instance setup, simply [download this
 ```docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) <the repo uri you copied>```
 
 ##### Build and tag the images
-The build script included in this repo expects the sample app code to live at `~/eventsappstart/`.
 
 1. `cd ~/aws-kubernetes/docker`
 1. Run the build script, passing the  base URI of your ECR repos (like `<account-#>.dkr.ecr.<region>.amazonaws.com`) as an argument: 
 ```
-./build_all.sh <base_uri>
+./build_all.sh <base_uri> 
 ```
---- NOTE that the base_uri should not end in a trailing `/`.
+> NOTE: \
+    - The `<base_uri>` should not end in a trailing `/`. \
+    - The build script included in this repo expects the sample app code to live at `~/eventsappstart/` by default, but a different path can be passed as the second arg.
+
+
 This will create and push v1.0 images for all three apps, and a v2.0 image for events-website.
 
 
