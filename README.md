@@ -8,6 +8,8 @@
 - [Containerize](#containerize)
 
 - [Deploy an EKS Cluster](#deploy-an-eks-cluster)
+
+- [Deploy App](#deploy-app)
   
 - [Blue/Green Update](#bluegreen-update)
 
@@ -92,7 +94,21 @@ This will create and push v1.0 images for all three apps, a v2.0 image for event
 
 ### Deploy an EKS Cluster
 
+### Deploy App
+1. `cd ~/aws-kubernetes/helm/events-app/`
+1. `helm install events-app . -f values-1.0.yaml`
+1. Run the commands output by `helm install` to retrieve the IP of the app.
+1. Visit the IP and verify that the app is running.
+
 ### Blue/Green Update
+1. Deploy both versions: `helm upgrade events-app . -f values-bluegreen.yaml`
+1. Visit the IP and verify the app shows `Version 2.0`.
+1. Rollback the deployment: `helm upgrade events-app . -f values-1.0.yaml`
+1. Visit the IP and verify the app shows the original page. 
+1. Deploy both versions again: `helm upgrade events-app . -f values-bluegreen.yaml`
+1. Visit the IP and verify the app shows `Version 2.0`.
+1. Make the deployment permanent: `helm upgrade events-app . -f values-2.0.yaml`
+1. Visit the IP and verify the app shows `Version 2.0`.
 
 ### Cleanup
 When you're all done, clean up your VM you created in [Environment](#environment). 

@@ -83,11 +83,11 @@ Helper to create an arbitrary deployment
 */}}
 {{- define "events-app.deployment" -}}
 {{ $fullname := include "events-app.fullname" .Globals }}
-{{ $appName := print $fullname "-" .name  }}
+{{ $appName := print $fullname "-" .name }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $appName }}
+  name: {{ print $appName "-" .image.tag | replace "." "-" }}
   labels:
     app: {{ $appName }}
 spec:

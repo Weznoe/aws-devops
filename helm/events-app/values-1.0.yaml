@@ -1,0 +1,11 @@
+website:
+  image: 
+    tag: "v1.0"
+
+api:
+  image: 
+    tag: "v1.0"
+  
+events-job-image: 
+  image: 
+    tag: "v1.0"

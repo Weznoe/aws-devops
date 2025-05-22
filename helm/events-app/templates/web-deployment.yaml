@@ -3,5 +3,11 @@
 {{- $apiAddr := print "http://" $apiName "-svc:8082" }}
 {{- $server := dict "name" "SERVER" "value" $apiAddr}}
 {{- $env := list $server}}
-{{- $data := dict "Globals" . "name" "website" "image" .Values.website.image "port" .Values.website.port  "env" $env }}
+{{- $data := dict "Globals" . "name" "website" "image" .Values.website.image "port" .Values.website.port  "env" $env "replicaCount" .Values.website.replicaCount}}
 {{- include "events-app.deployment" $data }}
+---
+{{- if .Values.website.blueGreenTag }}
+{{- $image := dict "repository" .Values.website.image.repository "tag" .Values.website.blueGreenTag }}
+{{- $dataBlueGreen := dict "Globals" . "name" "website" "image" $image "port" .Values.website.port "env" $env "replicaCount" .Values.website.replicaCount}}
+{{- include "events-app.deployment" $dataBlueGreen }}
+{{- end }}
