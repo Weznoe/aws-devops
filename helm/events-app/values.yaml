@@ -7,7 +7,7 @@ website:
   # This controls how many events-website pods to deploy
   replicaCount: 3
   image: 
-    repository: 360871920119.dkr.ecr.us-east-1.amazonaws.com/events-website
+    repository: <website-repo-here>
     tag: ""
 
   # The public port to host on
@@ -23,7 +23,7 @@ api:
   # This controls how many events-website pods to deploy
   replicaCount: 3
   image: 
-    repository: 360871920119.dkr.ecr.us-east-1.amazonaws.com/events-api
+    repository: <api-repo-here>
     tag: ""
 
   containerPort: 8082
@@ -31,7 +31,7 @@ api:
 # Configuration options for events-job
 eventsJob: 
   image: 
-    repository: 360871920119.dkr.ecr.us-east-1.amazonaws.com/events-job
+    repository: <job-repo-here>
     tag: ""
 
 # This is to override the chart name.
