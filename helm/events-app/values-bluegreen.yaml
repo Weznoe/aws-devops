@@ -8,6 +8,6 @@ api:
   image: 
     tag: "v1.0"
   
-events-job-image: 
+eventsJob: 
   image: 
     tag: "v1.0"

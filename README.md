@@ -114,12 +114,14 @@ This will create and push v1.0 images for all three apps, a v2.0 image for event
 1. Visit the IP and verify the app shows `Version 2.0`.
 
 ### Cleanup
-When you're all done, clean up your VM you created in [Environment](#environment). 
-1. Navigate to the EC2 service.
-1. Click the `Instances` link on the left.
-1. Find your active VM and select it.
-1. Select `Instance State` and then `Terminate (delete) instance`
-1. In the confirmation dialog, select `Terminate (delete)`.
+1. `helm uninstall events-app`
+    1. If you want to reinstall events-app, you'll need to clean up the PVCs backing mariadb.
+1. When you're all done, clean up your VM you created in [Environment](#environment) (if necessary): 
+    1. Navigate to the EC2 service.
+    1. Click the `Instances` link on the left.
+    1. Find your active VM and select it.
+    1. Select `Instance State` and then `Terminate (delete) instance`
+    1. In the confirmation dialog, select `Terminate (delete)`.
 
 
 
