@@ -12,6 +12,7 @@ website:
 
   # The public port to host on
   port: 80
+  containerPort: 8080
 
   # If provided, will deploy a duplicate deployment
   # pointed at a different version
@@ -24,6 +25,8 @@ api:
   image: 
     repository: 360871920119.dkr.ecr.us-east-1.amazonaws.com/events-api
     tag: ""
+
+  containerPort: 8082
   
 # Configuration options for events-job
 eventsJob: 

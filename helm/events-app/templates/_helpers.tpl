@@ -61,21 +61,24 @@ Create the name of the service account to use
 Helper to create an arbitrary service
 */}}
 {{- define "events-app.service" -}}
+{{- $fullname := include "events-app.fullname" .Globals }}
+{{- $appName := print $fullname "-"  .name }}
+{{- $name := print $appName "-svc" }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "events-app.fullname" . }}-{{ .Values.name }}
+  name: {{ $name }}
   labels:
-    {{- include "events-app.labels" . | nindent 4 }}
+    app: {{ $name }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: {{ .port }}
+      targetPort: {{ .targetPort | default .port}}
       protocol: TCP
-      name: http
   selector:
-    {{- include "events-app.selectorLabels" . | nindent 4 }}
+    app: {{ $appName }} 
+    ver: {{ .ver }} 
 {{- end }}
 
 {{/*
@@ -104,6 +107,7 @@ spec:
     spec:
       containers:
         - name: {{ $appName }}
+          imagePullPolicy: "Always"
           image: "{{ .image.repository }}:{{ .image.tag | default .Globals.Chart.AppVersion }}"
           ports:
             - containerPort: {{ .port }}

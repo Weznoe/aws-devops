@@ -1,14 +1,19 @@
+{{- $name := "website"}}
+{{- $containerPort := .Values.website.containerPort }}
 {{- $fullname := include "events-app.fullname" . }}
 {{- $apiName :=  print $fullname "-api" }}
-{{- $apiAddr := print "http://" $apiName "-svc:8082" }}
+{{- $apiAddr := print "http://" $apiName "-svc:" .Values.api.containerPort }}
 {{- $server := dict "name" "SERVER" "value" $apiAddr}}
 {{- $env := list $server}}
-{{- $data := dict "Globals" . "name" "website" "image" .Values.website.image "port" .Values.website.port  "env" $env "replicaCount" .Values.website.replicaCount}}
+{{- $data := dict "Globals" . "name" $name "image" .Values.website.image "port" $containerPort  "env" $env "replicaCount" .Values.website.replicaCount}}
 {{- include "events-app.deployment" $data }}
 
 {{- if .Values.website.blueGreenTag }}
 ---
 {{- $image := dict "repository" .Values.website.image.repository "tag" .Values.website.blueGreenTag }}
-{{- $dataBlueGreen := dict "Globals" . "name" "website" "image" $image "port" .Values.website.port "env" $env "replicaCount" .Values.website.replicaCount}}
+{{- $dataBlueGreen := dict "Globals" . "name" $name "image" $image "port" $containerPort "env" $env "replicaCount" .Values.website.replicaCount}}
 {{- include "events-app.deployment" $dataBlueGreen }}
 {{- end }}
+---
+{{- $data := dict "Globals" . "name" $name "type" "LoadBalancer" "port" .Values.website.port "targetPort" $containerPort "ver" .Values.website.image.tag }}
+{{- include "events-app.service" $data }}

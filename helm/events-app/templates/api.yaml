@@ -1,3 +1,5 @@
+{{- $name := "api"}}
+{{- $containerPort := .Values.api.containerPort }}
 {{- $fullname := include "events-app.fullname" .}}
 {{- $mariadbName := print $fullname "-mariadb"}}
 
@@ -10,5 +12,8 @@
 
 {{- $db := dict "name" "DBDATABASE" "value" "events_db" }}
 {{- $env := list $host $user $password $db }}
-{{- $data := dict "Globals" . "name" "api" "image" .Values.api.image "env" $env "replicaCount" .Values.api.replicaCount "port" 8082}}
+{{- $data := dict "Globals" . "name" $name "image" .Values.api.image "env" $env "replicaCount" .Values.api.replicaCount "port" $containerPort }}
 {{- include "events-app.deployment" $data }}
+---
+{{- $data := dict "Globals" . "name" $name "type" "ClusterIP" "port" $containerPort "ver" .Values.api.image.tag }}
+{{- include "events-app.service" $data }}
