@@ -32,7 +32,10 @@ un_edit_website() {
 build_tag_and_push 'events-job' 'v1.0' 'database-initializer'
 build_tag_and_push 'events-api' 'v1.0' 
 build_tag_and_push 'events-website' 'v1.0' 
+
 edit_website
 build_tag_and_push 'events-website' 'v2.0' 
 un_edit_website
+
+
 

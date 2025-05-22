@@ -1,0 +1,63 @@
+# Default values for events-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Configuration options for events-website
+website:
+  # This controls how many events-website pods to deploy
+  replicaCount: 3
+  image: 
+    repository: 
+    tag: ""
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  # The public port to host on
+  port: 
+
+  # If provided, will deploy a duplicate deployment
+  # pointed at a different version
+  blue-green-tag: ""
+
+# Configuration options for events-api
+api:
+  # This controls how many events-website pods to deploy
+  replicaCount: 3
+  image: 
+    repository: 
+    tag: ""
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+
+# Configuration options for events-job
+events-job-image: 
+  image: 
+    repository:
+    tag: ""
+  resources: {}
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+      # requests:
+      #   cpu: 100m
+      #   memory: 128Mi
+
+
+# This is to override the chart name.
+nameOverride: ""
+fullnameOverride: ""
+
+# Will be applied to all pods created for events-app
+podAnnotations: {}
+podLabels: {}

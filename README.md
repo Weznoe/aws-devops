@@ -7,7 +7,7 @@
 
 - [Containerize](#containerize)
 
-- [Deploy Cluster](#deploy-cluster)
+- [Deploy an EKS Cluster](#deploy-an-eks-cluster)
   
 - [Blue/Green Update](#bluegreen-update)
 
@@ -90,7 +90,7 @@ If you already have a suitable development instance setup, simply [download this
 
 This will create and push v1.0 images for all three apps, a v2.0 image for events-website, and update the `.yaml` resource files with the correct images.
 
-### Deploy Cluster
+### Deploy an EKS Cluster
 
 ### Blue/Green Update
 
