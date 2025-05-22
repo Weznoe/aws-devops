@@ -120,11 +120,11 @@ This will create and push v1.0 images for all three apps, a v2.0 image for event
 
 ### Cleanup
 1. `helm uninstall events-app`
-    - If you want to reinstall events-app, you'll need to clean up the PVCs backing mariadb.
+    - If you want to reinstall events-app, you'll need to clean up the PVCs backing `mariadb`.
 1. `cd ~/aws-kubernetes/eks/`
 1. `eksctl delete cluster -f cluster.yaml`
     - This will take a while.
-1. Navigate to the EC2 Service, EBS Volumes, and delete any whose state is `Available`.
+1. Navigate to the EC2 Service, EBS Volumes, and delete any volumes whose state is `Available`.
 1. When you're all done, clean up your VM you created in [Environment](#environment) (if necessary): 
     1. Navigate to the EC2 service.
     1. Click the `Instances` link on the left.
