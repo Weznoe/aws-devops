@@ -1,0 +1,7 @@
+{{- $fullname := include "events-app.fullname" . }}
+{{- $apiName :=  print $fullname "-api" }}
+{{- $apiAddr := print "http://" $apiName "-svc:8082" }}
+{{- $server := dict "name" "SERVER" "value" $apiAddr}}
+{{- $env := list $server}}
+{{- $data := dict "Globals" . "name" "website" "image" .Values.website.image "port" .Values.website.port  "env" $env }}
+{{- include "events-app.deployment" $data }}
