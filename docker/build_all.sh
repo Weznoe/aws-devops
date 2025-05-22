@@ -30,9 +30,9 @@ un_edit_website() {
 
 VALUES_PATH='../helm/events-app/values.yaml'
 edit_values() {
-    sed -i "s/<website-repo-here>/$BASE_URI:events-website/" $VALUES_PATH
-    sed -i "s/<api-repo-here>/$BASE_URI:events-api/" $VALUES_PATH
-    sed -i "s/<job-repo-here>/$BASE_URI:events-job/" $VALUES_PATH
+    sed -i "s/<website-repo-here>/$BASE_URI\/events-website/" $VALUES_PATH
+    sed -i "s/<api-repo-here>/$BASE_URI\/events-api/" $VALUES_PATH
+    sed -i "s/<job-repo-here>/$BASE_URI\/events-job/" $VALUES_PATH
 }
 
 
