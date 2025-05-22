@@ -93,6 +93,11 @@ If you already have a suitable development instance setup, simply [download this
 This will create and push v1.0 images for all three apps, a v2.0 image for events-website, and update the `.yaml` resource files with the correct images.
 
 ### Deploy an EKS Cluster
+1. `cd ~/aws-kubernetes/eks`
+1. `deploy.sh`
+    - optionally pass `initials` and `region` (initials default to `tc`, and region defaults to `us-east-1`)
+1. Wait a *while* (>10 mins) for the command to finish executing.
+1. Verify that your nodes exist: `kubectl get nodes`
 
 ### Deploy App
 1. `cd ~/aws-kubernetes/helm/events-app/`
@@ -115,7 +120,11 @@ This will create and push v1.0 images for all three apps, a v2.0 image for event
 
 ### Cleanup
 1. `helm uninstall events-app`
-    1. If you want to reinstall events-app, you'll need to clean up the PVCs backing mariadb.
+    - If you want to reinstall events-app, you'll need to clean up the PVCs backing mariadb.
+1. `cd ~/aws-kubernetes/eks/`
+1. `eksctl delete cluster -f cluster.yaml`
+    - This will take a while.
+1. Navigate to the EC2 Service, EBS Volumes, and delete any whose state is `Available`.
 1. When you're all done, clean up your VM you created in [Environment](#environment) (if necessary): 
     1. Navigate to the EC2 service.
     1. Click the `Instances` link on the left.
