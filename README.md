@@ -96,18 +96,21 @@ This will create and push v1.0 images for all three apps, a v2.0 image for event
 
 ### Deploy App
 1. `cd ~/aws-kubernetes/helm/events-app/`
+1. `helm dependency update`
 1. `helm install events-app . -f values-1.0.yaml`
 1. Run the commands output by `helm install` to retrieve the IP of the app.
 1. Visit the IP and verify that the app is running.
 
 ### Blue/Green Update
-1. Deploy both versions: `helm upgrade events-app . -f values-bluegreen.yaml`
+1. Because MariaDB is embedded as a dependency in the events-app, we need to preserve the root password when upgrading:
+```export MARIADB_ROOT_PASSWORD=$(kubectl get secret --namespace "default" events-app-mariadb -o jsonpath="{.data.mariadb-root-password}" | base64 -d)```
+1. Deploy both versions: `helm upgrade events-app . -f values-bluegreen.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
 1. Visit the IP and verify the app shows `Version 2.0`.
-1. Rollback the deployment: `helm upgrade events-app . -f values-1.0.yaml`
+1. Rollback the deployment: `helm upgrade events-app . -f values-1.0.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
 1. Visit the IP and verify the app shows the original page. 
-1. Deploy both versions again: `helm upgrade events-app . -f values-bluegreen.yaml`
+1. Deploy both versions again: `helm upgrade events-app . -f values-bluegreen.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
 1. Visit the IP and verify the app shows `Version 2.0`.
-1. Make the deployment permanent: `helm upgrade events-app . -f values-2.0.yaml`
+1. Make the deployment permanent: `helm upgrade events-app . -f values-2.0.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
 1. Visit the IP and verify the app shows `Version 2.0`.
 
 ### Cleanup

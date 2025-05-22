@@ -1,8 +1,10 @@
+{{- $fullname := include "events-app.fullname" .}}
+{{- $mariadbName := print $fullname "-mariadb"}}
 
-{{- $host := dict "name" "DBHOST" "value" "mariadb-server"}}
+{{- $host := dict "name" "DBHOST" "value" $mariadbName }}
 {{- $user := dict "name" "DBUSER" "value" "root" }}
 
-{{- $secretKeyRef := dict "name" "mariadb-server" "key" "mariadb-root-password" }}
+{{- $secretKeyRef := dict "name" $mariadbName "key" "mariadb-root-password" }}
 {{- $valueFrom := dict "secretKeyRef" $secretKeyRef }}
 {{- $password := dict "name" "DBPASSWORD" "valueFrom" $valueFrom  }}
 
