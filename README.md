@@ -100,10 +100,11 @@ This will create and push v1.0 images for all three apps, a v2.0 image for event
 1. Verify that your nodes exist: `kubectl get nodes`
 
 ### Deploy App
+1. Set your default storage class: `kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'`
 1. `cd ~/aws-kubernetes/helm/events-app/`
 1. `helm dependency update`
 1. `helm install events-app . -f values-1.0.yaml`
-1. Run the commands output by `helm install` to retrieve the IP of the app.
+1. Wait a bit for the app to launch, then run the commands output by `helm install` to retrieve the IP of the app.
 1. Visit the IP and verify that the app is running.
 
 ### Blue/Green Update
