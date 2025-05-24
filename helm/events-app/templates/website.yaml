@@ -15,5 +15,6 @@
 {{- include "events-app.deployment" $dataBlueGreen }}
 {{- end }}
 ---
-{{- $data := dict "Globals" . "name" $name "type" "LoadBalancer" "port" .Values.website.port "targetPort" $containerPort "ver" .Values.website.image.tag }}
+{{- $targetVer :=  .Values.website.blueGreenPublicTag | default .Values.website.image.tag  }}
+{{- $data := dict "Globals" . "name" $name "type" "LoadBalancer" "port" .Values.website.port "targetPort" $containerPort "ver" $targetVer }}
 {{- include "events-app.service" $data }}

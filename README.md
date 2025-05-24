@@ -110,14 +110,21 @@ This will create and push v1.0 images for all three apps, a v2.0 image for event
 ### Blue/Green Update
 1. Because MariaDB is embedded as a dependency in the events-app, we need to preserve the root password when upgrading:
 ```export MARIADB_ROOT_PASSWORD=$(kubectl get secret --namespace "default" events-app-mariadb -o jsonpath="{.data.mariadb-root-password}" | base64 -d)```
-1. Deploy both versions: `helm upgrade events-app . -f values-bluegreen.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
-1. Visit the IP and verify the app shows `Version 2.0`.
-1. Rollback the deployment: `helm upgrade events-app . -f values-1.0.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
-1. Visit the IP and verify the app shows the original page. 
-1. Deploy both versions again: `helm upgrade events-app . -f values-bluegreen.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
-1. Visit the IP and verify the app shows `Version 2.0`.
+1. Deploy both versions, still exposing version 1.0: `helm upgrade events-app . -f values-bluegreen-1.0.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
+    1. `kubectl get pods -l app=events-app-website` and verify you see both 1.0 and 2.0 pods.
+    1. Visit the IP and verify the app is the same. 
+1. With both versions still deployed, expose version 2.0: `helm upgrade events-app . -f values-bluegreen-2.0.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
+    1. `kubectl get pods -l app=events-app-website` and verify you see both 1.0 and 2.0 pods.
+    1. Visit the IP and verify the app shows \*\*Version 2.0\*\*.
+1. Rollback the deployment: `helm rollback events-app 1`
+    1. `kubectl get pods -l app=events-app-website` and verify you see only 1.0 pods `RUNNING`.
+    1. Visit the IP and verify the app shows the original page. 
+1. Deploy both versions again: `helm upgrade events-app . -f values-bluegreen-2.0.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
+    1. `kubectl get pods -l app=events-app-website` and verify you see both 1.0 and 2.0 pods.
+    1. Visit the IP and verify the app shows `Version 2.0`.
 1. Make the deployment permanent: `helm upgrade events-app . -f values-2.0.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
-1. Visit the IP and verify the app shows `Version 2.0`.
+    1. `kubectl get pods -l app=events-app-website` and verify you see only 2.0 pods `RUNNING`.
+    1. Visit the IP and verify the app shows `Version 2.0`.
 
 ### Cleanup
 1. `helm uninstall events-app`
@@ -132,9 +139,3 @@ This will create and push v1.0 images for all three apps, a v2.0 image for event
     1. Find your active VM and select it.
     1. Select `Instance State` and then `Terminate (delete) instance`
     1. In the confirmation dialog, select `Terminate (delete)`.
-
-
-
-
-
-    

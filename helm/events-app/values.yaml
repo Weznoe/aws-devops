@@ -14,9 +14,10 @@ website:
   port: 80
   containerPort: 8080
 
-  # If provided, will deploy a duplicate deployment
-  # pointed at a different version
+  # If provided, will deploy a duplicate deployment of a different version
   blueGreenTag: ""
+  # If provided, will point the load balancer at a different version tag than specified in image.tag
+  blueGreenPublicTag: ""
 
 # Configuration options for events-api
 api:

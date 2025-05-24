@@ -3,6 +3,7 @@ website:
     tag: "v1.0"
 
   blueGreenTag: "v2.0"
+  blueGreenPublicTag: "v1.0"
 
 api:
   image: 
