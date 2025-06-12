@@ -14,7 +14,6 @@ pipeline {
                 echo 'Building..'
                 echo "${dockerfiles_path}${imagename}.dockerfile"
                 script {
-                    dockerFile = "${dockerfiles_path}${imagename}.dockerfile"
                     dockerImage = docker.build "${repo}${imagename}:${tag}" "-f ${dockerfiles_path}${imagename}.dockerfile"
                 }
             }
