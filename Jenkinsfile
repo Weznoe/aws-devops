@@ -9,7 +9,7 @@ pipeline {
         string(name: 'tag', defaultValue: 'latest', description: "The tag to use for the Docker image")
     }
     environment { 
-      eventsapp_path = "${params.image_name == "events-job" ? "database-initializer" : imagename}"
+      eventsapp_path = "${params.image_name == "events-job" ? "database-initializer" : params.image_name}"
       dockerImage = ''
     }
 
