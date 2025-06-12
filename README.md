@@ -3,17 +3,7 @@
 
 - [Objectives](#objectives)
 
-- [Environment](#environment)
-
-- [Containerize](#containerize)
-
-- [Deploy an EKS Cluster](#deploy-an-eks-cluster)
-
-- [Deploy App](#deploy-app)
-  
-- [Blue/Green Update](#bluegreen-update)
-
-- [Cleanup](#cleanup)
+- [Jenkins Server](#jenkins-server)
 
 ### Objectives
 1. Stand up a Jenkins server
