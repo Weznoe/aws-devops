@@ -6,12 +6,9 @@ pipeline {
         imagename = 'events-api'
         tag = 'latest'
         eventsapp_repo = 'https://github.com/msutton150/eventsappstart.git'
-        eventsapp_path = 'eventsappstart/'
-
+        eventsapp_path = "$imagename"
 
         dockerImage = ''
-
-
     }
 
     stages {
@@ -23,7 +20,7 @@ pipeline {
                     checkout scm: scmGit(branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: eventsapp_repo]])
                 }
                 script {
-                    dockerImage = docker.build("${docker_repo}${imagename}:${tag}", "-f ${dockerfiles_path}${imagename}.dockerfile eventsapp/")
+                    dockerImage = docker.build("${docker_repo}${imagename}:${tag}", "-f ${dockerfiles_path}${imagename}.dockerfile eventsapp/$eventsapp_path")
                 }
             }
         }
