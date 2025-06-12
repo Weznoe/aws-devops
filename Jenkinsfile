@@ -33,12 +33,10 @@ pipeline {
         stage('Push') {
             steps {
                 echo 'Pushing..'
-                script {
-                    docker.withRegistry(url: docker_repo, credentialsId: ecr_credentials_id) {
-                        echo "Pushing image ${dockerImage.imageName}"
-                        // Push the Docker image to the ECR repository
-                        dockerImage.push()
-                    }
+                docker.withRegistry(url: docker_repo, credentialsId: ecr_credentials_id) {
+                    echo "Pushing image ${dockerImage.imageName}"
+                    // Push the Docker image to the ECR repository
+                    dockerImage.push()
                 }
             }
         }
