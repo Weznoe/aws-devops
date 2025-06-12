@@ -1,4 +1,4 @@
-# AWS Engagement Ready Program - Kubernetes Capstone
+# AWS Engagement Ready Program - DevOps Capstone
 ## Table of Contents
 
 - [Objectives](#objectives)
@@ -16,14 +16,14 @@
 - [Cleanup](#cleanup)
 
 ### Objectives
-1. Create and configure your deployment environment
-1. Containerize and store your images in a repository
-1. Deploy an Amazon EKS cluster
-1. Deploy your application, including a backend database
-1. Test updating your application using rolling updates
+1. Stand up a Jenkins server
+1. Create pipelines that:
+    1. Create a Kubernetes cluster
+    1. Build and push images for the apps
+    1. Deploy build images into the cluster
 
-### Environment
-If you already have a suitable development instance setup, simply [download this repo](#download-this-repo).
+### Jenkins Server
+If you already have a suitable jenkins instance setup, simply [download this repo](#download-this-repo).
 
 ##### Create an AWS access key pair
 1. Login to the [AWS Management Console](https://console.aws.amazon.com/).
