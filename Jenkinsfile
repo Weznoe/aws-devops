@@ -6,7 +6,8 @@ pipeline {
         imagename = 'events-api'
         tag = 'latest'
         eventsapp_repo = 'https://github.com/msutton150/eventsappstart.git'
-        eventsapp_path = "$imagename"
+        eventsapp_path = "$imagename/"
+        ecr_credentials_id = 'ecr:us-east-1:7b73aca7-fd7f-404e-9ff5-4ba215229bdd'
 
         dockerImage = ''
     }
@@ -33,7 +34,11 @@ pipeline {
             steps {
                 echo 'Pushing..'
                 script {
-                    dockerImage.push()
+                    docker.withRegistry("${docker_repo}", ecr_credentials_id) {
+                        echo "Pushing image ${dockerImage.imageName}"
+                        // Push the Docker image to the ECR repository
+                        dockerImage.push()
+                    }
                 }
             }
         }

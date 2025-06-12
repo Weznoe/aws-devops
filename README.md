@@ -15,6 +15,17 @@
 ### Jenkins Server
 If you already have a suitable jenkins instance setup, simply [download this repo](#download-this-repo).
 
+
+##### Plugins
+- all the defaults
+- docker pipeline
+- aws ecr
+- aws credentials
+
+##### Credentials
+- create github API token
+- create AWS IAM Role
+
 ##### Create an AWS access key pair
 1. Login to the [AWS Management Console](https://console.aws.amazon.com/).
 1. Navigate to the `IAM` service.
