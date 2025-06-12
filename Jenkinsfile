@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         dockerfiles_path = 'docker/'
-        docker_repo = '360871920119.dkr.ecr.us-east-1.amazonaws.com/'
+        docker_repo = 'https://360871920119.dkr.ecr.us-east-1.amazonaws.com/'
         imagename = 'events-api'
         tag = 'latest'
         eventsapp_repo = 'https://github.com/msutton150/eventsappstart.git'
