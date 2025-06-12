@@ -7,8 +7,8 @@ pipeline {
         tag = 'latest'
         eventsapp_repo = 'https://github.com/msutton150/eventsappstart.git'
         eventsapp_path = "$imagename/"
-        // ecr_credentials_id = 'ecr:us-east-1:7b73aca7-fd7f-404e-9ff5-4ba215229bdd'
-        ecr_credentials_id = 'ecr:us-east-1:ec2-jenkins-role'
+        ecr_credentials_id = 'ecr:us-east-1:7b73aca7-fd7f-404e-9ff5-4ba215229bdd'
+        // ecr_credentials_id = 'ecr:us-east-1:ec2-jenkins-role'
 
         dockerImage = ''
     }
