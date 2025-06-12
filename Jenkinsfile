@@ -34,11 +34,11 @@ pipeline {
             steps {
                 echo 'Pushing..'
                 script {
-                    docker.withRegistry(docker_repo, ecr_credentials_id) {
-                        echo "Pushing image ${dockerImage.imageName}"
-                        // Push the Docker image to the ECR repository
-                        dockerImage.push()
-                    }
+                    // docker.withRegistry(docker_repo, ecr_credentials_id) {
+                    echo "Pushing image ${dockerImage.imageName}"
+                    // Push the Docker image to the ECR repository
+                    dockerImage.push()
+                    // }
                 }
             }
         }
