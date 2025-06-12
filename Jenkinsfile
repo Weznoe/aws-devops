@@ -18,7 +18,7 @@ pipeline {
             steps {
                 echo 'Building..'
                 dir('eventsapp') {
-                    checkout scm: scmGit(branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: eventsapp_repo]])
+                    checkout scm: scmGit(branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: params.eventsapp_repo]])
                 }
                 script {
                     dockerImage = docker.build("${params.image_name}:${params.tag}", "-f ${params.dockerfiles_dir}${params.image_name}.dockerfile eventsapp/$eventsapp_path")
