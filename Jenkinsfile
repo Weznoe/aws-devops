@@ -34,7 +34,7 @@ pipeline {
             steps {
                 echo 'Pushing..'
                 script {
-                    docker.withRegistry(docker_repo, ecr_credentials_id) {
+                    docker.withRegistry(docker_repo, params.ecr_credentials) {
                         dockerImage.push()
                     }
                 }
