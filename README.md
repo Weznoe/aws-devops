@@ -1,4 +1,9 @@
 # AWS Engagement Ready Program - DevOps Capstone
+If you're reading this, I was super busy this week and had to allocate my time elsewhere. Got a pipeline done that can build each of the images, but nothing more. If I were to spend more time on this I would create a few more pipelines, driven by an orchestrator pipeline that:
+1. Calls this build image pipeline for each app in eventsapp
+1. Calls a pipeline to check if a k8s cluster exists and creates one if necessary
+1. Calls a deploy pipeline for each helmfile
+
 ## Table of Contents
 
 - [Objectives](#objectives)
@@ -8,12 +13,13 @@
 ### Objectives
 1. Stand up a Jenkins server
 1. Create pipelines that:
-    1. Create a Kubernetes cluster
     1. Build and push images for the apps
-    1. Deploy build images into the cluster
+    1. Create a Kubernetes cluster
+    1. Deploy built images into the cluster
 
 ### Jenkins Server
-If you already have a suitable jenkins instance setup, simply [download this repo](#download-this-repo).
+If you already have a suitable jenkins instance setup, simply create Pipeline that points at the Jenkinsfile in this repo.
+If you want to demonstrate building on commit you'll need to fork this project, create a GitHub API token, and set up the connection in Jenkins.
 
 
 ##### Plugins
@@ -25,118 +31,4 @@ If you already have a suitable jenkins instance setup, simply [download this rep
 ##### Credentials
 - create github API token
 - create AWS IAM Role
-
-##### Create an AWS access key pair
-1. Login to the [AWS Management Console](https://console.aws.amazon.com/).
-1. Navigate to the `IAM` service.
-1. Select the `Users` link from the left.
-1. Select your user.
-1. Select the `Security Credentials` tab, then scroll down to `Access keys` and select `Create access key`.
-1. Select the `CLI` use case and check the confirmation disclaimer at the bottom, then select `Next`.
-1. Select `Create access key`.
-1. Select `Download .csv file` and save this file for later.
-
-#####  Create an EC2 Instance and connect to it
-1. Navigate to the EC2 service.
-1. Select the `Instances` link from the left.
-1. Select `Launch Instances`.
-1. In the `Name` field, enter a name for this instance (ex. `deploy-env`).
-1. Choose Instance type of `t3.medium` or better.
-1. Under the `Key pair (login)` select `Proceed without a key pair (Not recommended)`
-1. Configure at least 20GiB of storage.
-1. Leave the defaults for everything else.
-1. Select `Launch Instance`.
-1. Wait for the instance to launch, then navigate to the launched instance and select `Connect`.
-1. In the `Connect to instance` screen, leave the defaults and select `Connect`.
-
-##### Download this repo
-1. `sudo yum install git -y`
-1. `cd ~`
-1. `git clone https://github.com/Weznoe/aws-kubernetes.git`
-
-##### Install your environment tools
-1. `cd ~/aws-kubernetes`
-1. `./setup_environment.sh`
-    1. Input the AWS Access Key and AWS Secret Access Key from the `.csv` file you downloaded earlier.
-    1. Enter your region.
-    1. Enter `json` for default output format.
-    1. You may be prompted for a `sudo` password.
-
-### Containerize
-##### Download the sample app repo
-1. `cd ~`
-1. `git clone https://github.com/msutton150/eventsappstart.git`
-##### Create your ECR repos to host your images
-1. Navigate to the ECR service.
-1. Select `Create Repository`.
-1. Name the repo `events-api`. 
-1. Accept the defaults for everything else.
-1. Select `Create`.
-1. Do the same for `events-website` and `events-job`.
-
-
-1. Copy the URI of one of the repos, you just created.
-1. On your `deploy-env` box, login to ECR through docker: 
-```docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) <the repo uri you copied>```
-
-##### Build and tag the images
-
-1. `cd ~/aws-kubernetes/docker`
-1. Run the build script, passing the  base URI of your ECR repos (like `<account-#>.dkr.ecr.<region>.amazonaws.com`) as an argument: 
-```
-./build_all.sh <base_uri> 
-```
-> NOTE: \
-    - The `<base_uri>` should not end in a trailing `/`. \
-    - The build script included in this repo expects the sample app code to live at `~/eventsappstart/` by default, but a different path can be passed as the second arg.
-
-
-This will create and push v1.0 images for all three apps, a v2.0 image for events-website, and update the `.yaml` resource files with the correct images.
-
-### Deploy an EKS Cluster
-1. `cd ~/aws-kubernetes/eks`
-1. `deploy.sh`
-    - optionally pass `initials` and `region` (initials default to `tc`, and region defaults to `us-east-1`)
-1. Wait a *while* (>10 mins) for the command to finish executing.
-1. Verify that your nodes exist: `kubectl get nodes`
-
-### Deploy App
-1. Set your default storage class: `kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'`
-1. `cd ~/aws-kubernetes/helm/events-app/`
-1. `helm dependency update`
-1. `helm install events-app . -f values-1.0.yaml`
-1. Wait a bit for the app to launch, then run the commands output by `helm install` to retrieve the IP of the app.
-1. Visit the IP and verify that the app is running.
-
-### Blue/Green Update
-1. Because MariaDB is embedded as a dependency in the events-app, we need to preserve the root password when upgrading:
-```export MARIADB_ROOT_PASSWORD=$(kubectl get secret --namespace "default" events-app-mariadb -o jsonpath="{.data.mariadb-root-password}" | base64 -d)```
-1. Deploy both versions, still exposing version 1.0: `helm upgrade events-app . -f values-bluegreen-1.0.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
-    1. `kubectl get pods -l app=events-app-website` and verify you see both 1.0 and 2.0 pods.
-    1. Visit the IP and verify the app is the same. 
-1. With both versions still deployed, expose version 2.0: `helm upgrade events-app . -f values-bluegreen-2.0.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
-    1. `kubectl get pods -l app=events-app-website` and verify you see both 1.0 and 2.0 pods.
-    1. Visit the IP and verify the app shows \*\*Version 2.0\*\*.
-1. Rollback the deployment: `helm rollback events-app 1`
-    1. `kubectl get pods -l app=events-app-website` and verify you see only 1.0 pods `RUNNING`.
-    1. Visit the IP and verify the app shows the original page. 
-1. Deploy both versions again: `helm upgrade events-app . -f values-bluegreen-2.0.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
-    1. `kubectl get pods -l app=events-app-website` and verify you see both 1.0 and 2.0 pods.
-    1. Visit the IP and verify the app shows `Version 2.0`.
-1. Make the deployment permanent: `helm upgrade events-app . -f values-2.0.yaml --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD`
-    1. `kubectl get pods -l app=events-app-website` and verify you see only 2.0 pods `RUNNING`.
-    1. Visit the IP and verify the app shows `Version 2.0`.
-
-### Cleanup
-1. `helm uninstall events-app`
-    - If you want to reinstall events-app, you'll need to clean up the PVCs backing `mariadb`.
-1. `cd ~/aws-kubernetes/eks/`
-1. `eksctl delete cluster -f cluster.yaml`
-    - This will take a while.
-1. Navigate to the EC2 Service, EBS Volumes, and delete any volumes whose state is `Available`.
-1. When you're all done, clean up your VM you created in [Environment](#environment) (if necessary): 
-    1. Navigate to the EC2 service.
-    1. Click the `Instances` link on the left.
-    1. Find your active VM and select it.
-    1. Select `Instance State` and then `Terminate (delete) instance`
-    1. In the confirmation dialog, select `Terminate (delete)`.
+    - add it as an AWS credential in Jenkins, with the ARN for the role as the only argument
